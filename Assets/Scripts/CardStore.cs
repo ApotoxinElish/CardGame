@@ -11,7 +11,7 @@ public class CardStore : MonoBehaviour
     void Start()
     {
         LoadCardData();
-        TestLoad();
+        // TestLoad();
     }
 
     // Update is called once per frame
