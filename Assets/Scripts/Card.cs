@@ -11,6 +11,7 @@ public class Card
     }
 }
 
+// 怪兽卡
 public class MonsterCard : Card
 {
     public int attack;
@@ -18,15 +19,16 @@ public class MonsterCard : Card
     public int healthPointMax;
     // 等级、属性
 
-    public MonsterCard(int _id, string _cardName, int _attack, int _healthPoint, int _healthPointMax) : base(_id, _cardName)
+    public MonsterCard(int _id, string _cardName, int _attack, int _healthPointMax) : base(_id, _cardName)
     {
         this.attack = _attack;
-        this.healthPoint = _healthPoint;
+        this.healthPoint = _healthPointMax;
         this.healthPointMax = _healthPointMax;
     }
 
 }
 
+// 魔法卡
 public class SpellCard : Card
 {
     public string effect;
