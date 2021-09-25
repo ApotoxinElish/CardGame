@@ -18,9 +18,6 @@ public class DeckManager : MonoBehaviour
     private Dictionary<int, GameObject> libraryDic = new Dictionary<int, GameObject>();
     private Dictionary<int, GameObject> deckDic = new Dictionary<int, GameObject>();
 
-
-    // private Dictionary<int, GameObject> cardDic = new Dictionary<int, GameObject>();
-    // private Dictionary<int, GameObject> deckDic = new Dictionary<int, GameObject>();
     // Start is called before the first frame update
     void Start()
     {
@@ -68,7 +65,10 @@ public class DeckManager : MonoBehaviour
             PlayerData.playerDeck[_id]--;
             PlayerData.playerCards[_id]++;
 
-            deckDic[_id].GetComponent<CardCounter>().SetCounter(-1);
+            if (!deckDic[_id].GetComponent<CardCounter>().SetCounter(-1))
+            {
+                deckDic.Remove(_id);
+            }
             if (libraryDic.ContainsKey(_id))
             {
                 libraryDic[_id].GetComponent<CardCounter>().SetCounter(1);
@@ -93,7 +93,10 @@ public class DeckManager : MonoBehaviour
             {
                 CreatCard(_id, CardState.Deck);
             }
-            libraryDic[_id].GetComponent<CardCounter>().SetCounter(-1);
+            if (!libraryDic[_id].GetComponent<CardCounter>().SetCounter(-1))
+            {
+                libraryDic.Remove(_id);
+            }
         }
     }
     public void CreatCard(int _id, CardState _cardState)

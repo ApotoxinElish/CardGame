@@ -8,10 +8,16 @@ public class CardCounter : MonoBehaviour
     public Text counterText;
     private int counter = 0;
 
-    public void SetCounter(int _value)
+    public bool SetCounter(int _value)
     {
         counter += _value;
         OnCounterChange();
+        if (counter == 0)
+        {
+            Destroy(gameObject);
+            return false;
+        }
+        return true;
     }
 
     private void OnCounterChange()
