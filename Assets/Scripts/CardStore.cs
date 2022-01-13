@@ -66,4 +66,22 @@ public class CardStore : MonoBehaviour
         Card card = cardList[Random.Range(0, cardList.Count)];
         return card;
     }
+
+    public Card CopyCard(int _id)
+    {
+        Card copyCard = new Card(_id, cardList[_id].cardName);
+        if (copyCard is MonsterCard)
+        {
+            var monstercard = cardList[_id] as MonsterCard;
+            copyCard = new MonsterCard(_id, monstercard.cardName, monstercard.attack, monstercard.healthPoint);
+        }
+        else if (cardList[_id] is SpellCard)
+        {
+            var spellcard = cardList[_id] as SpellCard;
+            copyCard = new SpellCard(_id, spellcard.cardName, spellcard.effect);
+        }
+        // 其他卡牌类型
+
+        return copyCard;
+    }
 }

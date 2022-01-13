@@ -562,6 +562,7 @@ GameObject:
   m_Component:
   - component: {fileID: 170855362953134}
   - component: {fileID: 170855362953135}
+  - component: {fileID: -5977794251275665984}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -611,6 +612,19 @@ MonoBehaviour:
   healthText: {fileID: 170854722162651}
   effectText: {fileID: 170854846618961}
   backgroundImage: {fileID: 170854136568344}
+--- !u!114 &-5977794251275665984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170855362953169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d00e519253d3914cbd40ef553a83abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomSize: 1.2
 --- !u!1 &170855931978172
 GameObject:
   m_ObjectHideFlags: 0
