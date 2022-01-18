@@ -56,6 +56,8 @@ public class BattleManager : MonoBehaviour
         // 玩家抽卡5，敌人抽卡5
         DrawCard(0, 3);
         DrawCard(1, 3);
+
+        GamePhase = GamePhase.playerDraw;
     }
 
     public void ReadDeck()
@@ -109,6 +111,22 @@ public class BattleManager : MonoBehaviour
 
     }
 
+    public void OnPlayerDraw()
+    {
+        if (GamePhase == GamePhase.playerDraw)
+        {
+            DrawCard(0, 1);
+            GamePhase = GamePhase.playerAction;
+        }
+    }
+    public void OnEnemyDraw()
+    {
+        if (GamePhase == GamePhase.enemyDraw)
+        {
+            DrawCard(1, 1);
+            GamePhase = GamePhase.enemyAction;
+        }
+    }
     public void DrawCard(int _player, int _count)
     {
         List<Card> drawDeck = new List<Card>();
@@ -132,6 +150,10 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    public void OnClickTurnEnd()
+    {
+        TurnEnd();
+    }
     public void TurnEnd()
     {
         if (GamePhase == GamePhase.playerAction)
