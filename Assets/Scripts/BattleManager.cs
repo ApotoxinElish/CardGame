@@ -66,7 +66,7 @@ public class BattleManager : MonoSingleton<BattleManager>
         DrawCard(0, 3);
         DrawCard(1, 3);
 
-        GamePhase = GamePhase.playerDraw;
+        NextPhase();
 
         SummonCounter = SummonCountMax;
     }
@@ -127,18 +127,18 @@ public class BattleManager : MonoSingleton<BattleManager>
         if (GamePhase == GamePhase.playerDraw)
         {
             DrawCard(0, 1);
+            NextPhase();
         }
-        GamePhase = GamePhase.playerAction;
-        phaseChangeEvent.Invoke();
+
     }
     public void OnEnemyDraw()
     {
         if (GamePhase == GamePhase.enemyDraw)
         {
             DrawCard(1, 1);
+            NextPhase();
         }
-        GamePhase = GamePhase.enemyAction;
-        phaseChangeEvent.Invoke();
+
     }
     public void DrawCard(int _player, int _count)
     {
@@ -170,29 +170,44 @@ public class BattleManager : MonoSingleton<BattleManager>
     }
     public void TurnEnd()
     {
-        if (GamePhase == GamePhase.playerAction)
+        if (GamePhase == GamePhase.playerAction || GamePhase == GamePhase.enemyAction)
         {
-            GamePhase = GamePhase.enemyDraw;
-            phaseChangeEvent.Invoke();
-        }
-        else if (GamePhase == GamePhase.enemyAction)
-        {
-            GamePhase = GamePhase.playerDraw;
-            phaseChangeEvent.Invoke();
+            NextPhase();
         }
     }
+    public void NextPhase()
+    {
+        if ((int)GamePhase == System.Enum.GetNames(GamePhase.GetType()).Length - 1)
+        {
+            GamePhase = GamePhase.playerDraw;
+        }
+        else
+        {
+            GamePhase += 1;
+        }
+        phaseChangeEvent.Invoke();
+    }
 
+    /// <summary>
+    /// 发出召唤请求
+    /// </summary>
+    /// <param name="_player">玩家编号</param>
+    /// <param name="_monster">怪兽卡</param>
     public void SummonRequst(int _player, GameObject _monster)
     {
         GameObject[] blocks;
         bool hasEmptyBlock = false;
-        if (_player == 0)
+        if (_player == 0 && GamePhase == GamePhase.playerAction)
         {
             blocks = playerBlocks;
         }
-        else
+        else if (_player == 1 && GamePhase == GamePhase.enemyAction)
         {
             blocks = enemyBlocks;
+        }
+        else
+        {
+            return;
         }
         if (SummonCounter[_player] > 0)
         {
@@ -211,10 +226,26 @@ public class BattleManager : MonoSingleton<BattleManager>
             waitingPlayer = _player;
         }
     }
-
+    /// <summary>
+    /// 召唤确认
+    /// </summary>
+    /// <param name="_block"></param>
     public void SummonConfirm(Transform _block)
     {
         Summon(waitingPlayer, waitingMonster, _block);
+        GameObject[] blocks;
+        if (waitingPlayer == 0)
+        {
+            blocks = playerBlocks;
+        }
+        else
+        {
+            blocks = enemyBlocks;
+        }
+        foreach (var block in blocks)
+        {
+            block.GetComponent<Block>().SummonBlock.SetActive(false);//关闭召唤显示
+        }
     }
 
     public void Summon(int _player, GameObject _monster, Transform _block)
