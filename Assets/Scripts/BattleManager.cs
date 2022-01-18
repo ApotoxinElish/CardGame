@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum GamePhase
 {
     gameStart, playerDraw, playerAction, enemyDraw, enemyAction
 }
 
-public class BattleManager : MonoBehaviour
+public class BattleManager : MonoSingleton<BattleManager>
 {
     public PlayerData playerData;
     public PlayerData enemyData;//数据
@@ -28,6 +29,14 @@ public class BattleManager : MonoBehaviour
 
     public GamePhase GamePhase = GamePhase.gameStart;
 
+    public UnityEvent phaseChangeEvent = new UnityEvent();
+
+    public int[] SummonCountMax = new int[2];// 0 player, 1 enemy
+    private int[] SummonCounter = new int[2];
+
+    private GameObject waitingMonster;
+    private int waitingPlayer;
+
 
     // Start is called before the first frame update
     void Start()
@@ -44,7 +53,6 @@ public class BattleManager : MonoBehaviour
     //游戏流程
     //开始游戏：加载数据，卡组洗牌，初始手牌
     //回合结束，游戏阶段
-
     public void GameStart()
     {
         // 读取数据
@@ -59,6 +67,8 @@ public class BattleManager : MonoBehaviour
         DrawCard(1, 3);
 
         GamePhase = GamePhase.playerDraw;
+
+        SummonCounter = SummonCountMax;
     }
 
     public void ReadDeck()
@@ -117,16 +127,18 @@ public class BattleManager : MonoBehaviour
         if (GamePhase == GamePhase.playerDraw)
         {
             DrawCard(0, 1);
-            GamePhase = GamePhase.playerAction;
         }
+        GamePhase = GamePhase.playerAction;
+        phaseChangeEvent.Invoke();
     }
     public void OnEnemyDraw()
     {
         if (GamePhase == GamePhase.enemyDraw)
         {
             DrawCard(1, 1);
-            GamePhase = GamePhase.enemyAction;
         }
+        GamePhase = GamePhase.enemyAction;
+        phaseChangeEvent.Invoke();
     }
     public void DrawCard(int _player, int _count)
     {
@@ -147,6 +159,7 @@ public class BattleManager : MonoBehaviour
         {
             GameObject card = Instantiate(cardPrefab, hand);
             card.GetComponent<CardDisplay>().card = drawDeck[0];
+            card.GetComponent<BattleCard>().playerID = _player;
             drawDeck.RemoveAt(0);
         }
     }
@@ -160,13 +173,56 @@ public class BattleManager : MonoBehaviour
         if (GamePhase == GamePhase.playerAction)
         {
             GamePhase = GamePhase.enemyDraw;
+            phaseChangeEvent.Invoke();
         }
         else if (GamePhase == GamePhase.enemyAction)
         {
             GamePhase = GamePhase.playerDraw;
+            phaseChangeEvent.Invoke();
         }
     }
 
+    public void SummonRequst(int _player, GameObject _monster)
+    {
+        GameObject[] blocks;
+        bool hasEmptyBlock = false;
+        if (_player == 0)
+        {
+            blocks = playerBlocks;
+        }
+        else
+        {
+            blocks = enemyBlocks;
+        }
+        if (SummonCounter[_player] > 0)
+        {
+            foreach (var block in blocks)
+            {
+                if (block.GetComponent<Block>().card == null)
+                {
+                    block.GetComponent<Block>().SummonBlock.SetActive(true);//等待召唤显示
+                    hasEmptyBlock = true;
+                }
+            }
+        }
+        if (hasEmptyBlock)
+        {
+            waitingMonster = _monster;
+            waitingPlayer = _player;
+        }
+    }
 
+    public void SummonConfirm(Transform _block)
+    {
+        Summon(waitingPlayer, waitingMonster, _block);
+    }
 
+    public void Summon(int _player, GameObject _monster, Transform _block)
+    {
+        _monster.transform.SetParent(_block);
+        _monster.transform.localPosition = Vector3.zero;
+        _monster.GetComponent<BattleCard>().state = BattleCardState.inBlock;
+        _block.GetComponent<Block>().card = _monster;
+        SummonCounter[_player]--;
+    }
 }

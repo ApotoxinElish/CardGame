@@ -17,7 +17,7 @@ public class ClickCard : MonoBehaviour, IPointerDownHandler
     void Start()
     {
         DeckManager = GameObject.Find("DeckManager").GetComponent<DeckManager>();
-        // PlayerData = GameObject.Find("DataManager").GetComponent<PlayerData>();
+        //PlayerData = GameObject.Find("DataManager").GetComponent<PlayerData>();
     }
 
     // Update is called once per frame
