@@ -70,7 +70,7 @@ public class CardStore : MonoBehaviour
     public Card CopyCard(int _id)
     {
         Card copyCard = new Card(_id, cardList[_id].cardName);
-        if (copyCard is MonsterCard)
+        if (cardList[_id] is MonsterCard)
         {
             var monstercard = cardList[_id] as MonsterCard;
             copyCard = new MonsterCard(_id, monstercard.cardName, monstercard.attack, monstercard.healthPoint);
