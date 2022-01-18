@@ -7,6 +7,7 @@ public class Block : MonoBehaviour, IPointerDownHandler
 {
     public GameObject card;
     public GameObject SummonBlock;
+    public GameObject AttackBlock;
 
     public void OnPointerDown(PointerEventData eventData)
     {

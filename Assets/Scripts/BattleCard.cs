@@ -13,6 +13,9 @@ public class BattleCard : MonoBehaviour, IPointerDownHandler
     public int playerID;
     public BattleCardState state = BattleCardState.inHand;
 
+    public int AttackCount;
+    private int attackCount;
+
     public void OnPointerDown(PointerEventData eventData)
     {
         //当在手牌点击时，发起召唤请求
@@ -22,10 +25,20 @@ public class BattleCard : MonoBehaviour, IPointerDownHandler
             {
                 BattleManager.Instance.SummonRequst(playerID, gameObject);
             }
+            else if (state == BattleCardState.inBlock && attackCount > 0)//当在场上点击时，发起攻击请求
+            {
+                BattleManager.Instance.AttackRequst(playerID, gameObject);
+            }
         }
+    }
 
-
-        //当在场上点击时，发起攻击请求
+    public void ResetAttack()
+    {
+        attackCount = AttackCount;
+    }
+    public void CostAttackCount()
+    {
+        attackCount--;
     }
 
     // Start is called before the first frame update

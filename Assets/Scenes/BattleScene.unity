@@ -725,8 +725,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1042,6 +1042,7 @@ MonoBehaviour:
   SummonCountMax: 0200000002000000
   ArrowPrefab: {fileID: 3551962078633845994, guid: 6cfd0a1a235cf3144bfd7660ca3d2578, type: 3}
   Canvas: {fileID: 1973912751}
+  attackArrow: {fileID: 3551962078633845994, guid: 6e9ca95b20fc70c498377b4cfb43d7f7, type: 3}
 --- !u!1001 &544435209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1414,7 +1415,7 @@ RectTransform:
   m_Children:
   - {fileID: 421730656}
   m_Father: {fileID: 1973912751}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1803,7 +1804,7 @@ RectTransform:
   m_Children:
   - {fileID: 1624930213}
   m_Father: {fileID: 1973912751}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1885,7 +1886,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 800, y: 0}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 230, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1450621775
 MonoBehaviour:
@@ -2147,7 +2148,7 @@ RectTransform:
   m_Children:
   - {fileID: 256376576}
   m_Father: {fileID: 1973912751}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2404,9 +2405,9 @@ RectTransform:
   - {fileID: 1972877176}
   - {fileID: 719957831}
   - {fileID: 393240129}
-  - {fileID: 1317546106}
   - {fileID: 1662506950}
   - {fileID: 957736653}
+  - {fileID: 1317546106}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -34,12 +34,17 @@ public class BattleManager : MonoSingleton<BattleManager>
     public int[] SummonCountMax = new int[2];// 0 player, 1 enemy
     private int[] SummonCounter = new int[2];
 
+    // 召唤辅助变量
     private GameObject waitingMonster;
     private int waitingPlayer;
-
     public GameObject ArrowPrefab;
     private GameObject arrow;
+
     public Transform Canvas;
+
+    private GameObject attackingMonster;
+    private int attackingPlayer;
+    public GameObject attackArrow;
 
     // Start is called before the first frame update
     void Start()
@@ -253,8 +258,80 @@ public class BattleManager : MonoSingleton<BattleManager>
         _monster.GetComponent<BattleCard>().state = BattleCardState.inBlock;
         _block.GetComponent<Block>().card = _monster;
         SummonCounter[_player]--;
+
+        MonsterCard mc = _monster.GetComponent<CardDisplay>().card as MonsterCard;
+        _monster.GetComponent<BattleCard>().AttackCount = mc.attackTime;
+        _monster.GetComponent<BattleCard>().ResetAttack();
     }
 
+    public void AttackRequst(int _player, GameObject _monster)
+    {
+        GameObject[] blocks;
+        bool hasMonsterBlock = false;
+        if (_player == 0 && GamePhase == GamePhase.playerAction)
+        {
+            blocks = enemyBlocks;
+        }
+        else if (_player == 1 && GamePhase == GamePhase.enemyAction)
+        {
+            blocks = playerBlocks;
+        }
+        else
+        {
+            return;
+        }
+
+        foreach (var block in blocks)
+        {
+            if (block.GetComponent<Block>().card != null)
+            {
+                block.GetComponent<Block>().AttackBlock.SetActive(true);//等待攻击显示
+                block.GetComponent<Block>().card.GetComponent<AttackTarget>().attackable = true;
+                hasMonsterBlock = true;
+            }
+        }
+        if (hasMonsterBlock)
+        {
+            attackingMonster = _monster;
+            attackingPlayer = _player;
+            CreatArrow(_monster.transform, attackArrow);
+        }
+
+    }
+    /// <summary>
+    /// 攻击怪兽
+    /// </summary>
+    /// <param name="_target">被攻击怪兽</param>
+    public void AttackConfirm(GameObject _target)
+    {
+        Attack(attackingMonster, _target);
+        DestroyArrow();
+        CloseBlocks();
+
+        GameObject[] blocks;
+        if (attackingPlayer == 0)
+        {
+            blocks = enemyBlocks;
+        }
+        else
+        {
+            blocks = playerBlocks;
+        }
+        foreach (var block in blocks)
+        {
+            if (block.GetComponent<Block>().card != null)
+            {
+                block.GetComponent<Block>().card.GetComponent<AttackTarget>().attackable = false;
+            }
+        }
+    }
+    public void Attack(GameObject _attacker, GameObject _target)
+    {
+        MonsterCard monster = _attacker.GetComponent<CardDisplay>().card as MonsterCard;
+        _target.GetComponent<AttackTarget>().ApplyDamage(monster.attack);
+        _attacker.GetComponent<BattleCard>().CostAttackCount();
+        _target.GetComponent<CardDisplay>().ShowCard();
+    }
 
     public void CreatArrow(Transform _startPoint, GameObject _prefab)
     {
@@ -266,21 +343,17 @@ public class BattleManager : MonoSingleton<BattleManager>
     {
         Destroy(arrow);
     }
-
     public void CloseBlocks()
     {
-        GameObject[] blocks;
-        if (waitingPlayer == 0)
-        {
-            blocks = playerBlocks;
-        }
-        else
-        {
-            blocks = enemyBlocks;
-        }
-        foreach (var block in blocks)
+        foreach (var block in playerBlocks)
         {
             block.GetComponent<Block>().SummonBlock.SetActive(false);//关闭召唤显示
+            block.GetComponent<Block>().AttackBlock.SetActive(false);//关闭攻击显示
+        }
+        foreach (var block in enemyBlocks)
+        {
+            block.GetComponent<Block>().SummonBlock.SetActive(false);//关闭召唤显示
+            block.GetComponent<Block>().AttackBlock.SetActive(false);//关闭攻击显示
         }
     }
 }
