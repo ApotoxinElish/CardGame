@@ -28,6 +28,7 @@ public class BattleManager : MonoBehaviour
 
     public GamePhase GamePhase = GamePhase.gameStart;
 
+
     // Start is called before the first frame update
     void Start()
     {
