@@ -8,7 +8,7 @@ public class PhaseDisplayer : MonoBehaviour
 {
     public TMP_Text phaseText;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         BattleManager.Instance.phaseChangeEvent.AddListener(UpdateText);
     }
