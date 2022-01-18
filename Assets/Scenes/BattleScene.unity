@@ -1040,6 +1040,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   SummonCountMax: 0200000002000000
+  ArrowPrefab: {fileID: 3551962078633845994, guid: 6cfd0a1a235cf3144bfd7660ca3d2578, type: 3}
+  Canvas: {fileID: 1973912751}
 --- !u!1001 &544435209
 PrefabInstance:
   m_ObjectHideFlags: 0

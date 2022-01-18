@@ -37,6 +37,9 @@ public class BattleManager : MonoSingleton<BattleManager>
     private GameObject waitingMonster;
     private int waitingPlayer;
 
+    public GameObject ArrowPrefab;
+    private GameObject arrow;
+    public Transform Canvas;
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +50,12 @@ public class BattleManager : MonoSingleton<BattleManager>
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetMouseButton(1))
+        {
+            waitingMonster = null;
+            DestroyArrow();
+            CloseBlocks();
+        }
     }
 
     //游戏流程
@@ -224,6 +232,7 @@ public class BattleManager : MonoSingleton<BattleManager>
         {
             waitingMonster = _monster;
             waitingPlayer = _player;
+            CreatArrow(_monster.transform, ArrowPrefab);
         }
     }
     /// <summary>
@@ -233,6 +242,33 @@ public class BattleManager : MonoSingleton<BattleManager>
     public void SummonConfirm(Transform _block)
     {
         Summon(waitingPlayer, waitingMonster, _block);
+        CloseBlocks();
+        DestroyArrow();
+    }
+
+    public void Summon(int _player, GameObject _monster, Transform _block)
+    {
+        _monster.transform.SetParent(_block);
+        _monster.transform.localPosition = Vector3.zero;
+        _monster.GetComponent<BattleCard>().state = BattleCardState.inBlock;
+        _block.GetComponent<Block>().card = _monster;
+        SummonCounter[_player]--;
+    }
+
+
+    public void CreatArrow(Transform _startPoint, GameObject _prefab)
+    {
+        DestroyArrow();
+        arrow = GameObject.Instantiate(_prefab, Canvas);
+        arrow.GetComponent<Arrow>().SetStartPoint(new Vector2(_startPoint.position.x, _startPoint.position.y));
+    }
+    public void DestroyArrow()
+    {
+        Destroy(arrow);
+    }
+
+    public void CloseBlocks()
+    {
         GameObject[] blocks;
         if (waitingPlayer == 0)
         {
@@ -246,14 +282,5 @@ public class BattleManager : MonoSingleton<BattleManager>
         {
             block.GetComponent<Block>().SummonBlock.SetActive(false);//关闭召唤显示
         }
-    }
-
-    public void Summon(int _player, GameObject _monster, Transform _block)
-    {
-        _monster.transform.SetParent(_block);
-        _monster.transform.localPosition = Vector3.zero;
-        _monster.GetComponent<BattleCard>().state = BattleCardState.inBlock;
-        _block.GetComponent<Block>().card = _monster;
-        SummonCounter[_player]--;
     }
 }
