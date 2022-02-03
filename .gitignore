@@ -89,3 +89,5 @@ crashlytics-build.properties
 # Ignore all local history of files
 .history
 .ionide
+
+# Support for Project snippet scope
